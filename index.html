@@ -39,6 +39,21 @@
   #depthLabel { color:#bfe6ff; font-size:12px; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
   #waveIcon { font-size:17px; }
 
+  #floorWrap { position:fixed; right:16px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; align-items:center; gap:10px;
+    background:rgba(4,20,32,.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    padding:16px 10px; border-radius:22px; border:1px solid rgba(140,220,255,.22); }
+  #floorSlider { -webkit-appearance:none; appearance:none; width:150px; height:34px; background:transparent;
+    transform:rotate(-90deg); transform-origin:center; margin:58px -58px; }
+  #floorSlider::-webkit-slider-runnable-track { height:7px; border-radius:4px;
+    background:linear-gradient(90deg,#3a2a10,#ffb454); }
+  #floorSlider::-webkit-slider-thumb { -webkit-appearance:none; width:25px; height:25px; border-radius:50%;
+    background:#fff4e2; border:3px solid #e0952f; margin-top:-9px; box-shadow:0 2px 10px rgba(0,0,0,.5); }
+  #floorSlider::-moz-range-track { height:7px; border-radius:4px; background:#3a2a10; }
+  #floorSlider::-moz-range-thumb { width:25px; height:25px; border-radius:50%; background:#fff4e2; border:3px solid #e0952f; }
+  #floorLabel { color:#ffd9a8; font-size:12px; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
+  #floorIcon { font-size:16px; }
+
   #hint { position:fixed; bottom:26px; left:50%; transform:translateX(-50%); display:none;
     color:#cfe9f8; font-size:13px; background:rgba(4,20,32,.6); backdrop-filter:blur(10px);
     padding:9px 18px; border-radius:20px; border:1px solid rgba(140,220,255,.2); max-width:88vw; text-align:center; }
@@ -56,6 +71,11 @@
     <span id="waveIcon">🌊</span>
     <input id="slider" type="range" min="5" max="140" value="30" step="1">
     <span id="depthLabel">0.30 m</span>
+  </div>
+  <div id="floorWrap">
+    <span id="floorIcon">📏</span>
+    <input id="floorSlider" type="range" min="80" max="220" value="145" step="1">
+    <span id="floorLabel">1.45 m</span>
   </div>
   <div id="hint"></div>
   <div id="err"></div>
@@ -279,7 +299,8 @@ async function startGyro(){
   floorY = -1.45;               // assumed eye height above floor
   updateWaterY();
   camera.position.set(0,0,0);
-  showUI('Hold the phone upright. Slider raises the water.');
+  $('floorWrap').style.display='flex';   // calibration needed: no real floor detection
+  showUI('Left slider = water depth. Right slider = phone height above floor — adjust until the water sits on the real ground.');
 
   renderer.setAnimationLoop(()=>{
     if (orientationReady) camera.quaternion.copy(deviceQuat);
@@ -327,6 +348,13 @@ function showErr(m){ errBox.style.display='block'; errBox.textContent=m; }
 slider.addEventListener('input', ()=>{
   waterHeight = slider.value/100;
   depthLabel.textContent = waterHeight.toFixed(2)+' m';
+  updateWaterY();
+});
+
+const floorSlider = $('floorSlider'), floorLabel = $('floorLabel');
+floorSlider.addEventListener('input', ()=>{
+  floorY = -(floorSlider.value/100);
+  floorLabel.textContent = (floorSlider.value/100).toFixed(2)+' m';
   updateWaterY();
 });
 
