@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>AR Floor Test — Pink Stickers</title>
+<title>AR Flood</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { width:100%; height:100%; overflow:hidden; background:#000;
@@ -14,33 +14,51 @@
   #overlay { position:fixed; inset:0; z-index:10; pointer-events:none; }
   #overlay > * { pointer-events:auto; }
 
-  #startScreen { position:fixed; inset:0; z-index:20; background:linear-gradient(160deg,#1f0418,#400a2c);
+  #startScreen { position:fixed; inset:0; z-index:20; background:linear-gradient(160deg,#04121f,#0a2740);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; padding:32px; text-align:center; }
-  #startScreen h1 { color:#ffd9f0; font-size:28px; font-weight:600; }
-  #startScreen p { color:#d19cbd; font-size:14px; line-height:1.55; max-width:330px; }
-  #startBtn { padding:17px 52px; font-size:19px; font-weight:600; color:#32021f;
-    background:linear-gradient(135deg,#ff9fd8,#ff4fae); border:none; border-radius:40px;
-    box-shadow:0 8px 30px rgba(255,80,175,.45); }
+  #startScreen h1 { color:#dff2ff; font-size:30px; font-weight:600; letter-spacing:.5px; }
+  #startScreen p { color:#8fb6cf; font-size:14px; line-height:1.55; max-width:320px; }
+  #startBtn { padding:17px 52px; font-size:19px; font-weight:600; color:#012032;
+    background:linear-gradient(135deg,#7fe3ff,#3aa9e0); border:none; border-radius:40px;
+    box-shadow:0 8px 30px rgba(60,180,240,.45); }
   #startBtn:active { transform:scale(.96); }
   #startBtn:disabled { opacity:.6; }
 
-  #hud { position:fixed; top:calc(env(safe-area-inset-top) + 12px); left:50%; transform:translateX(-50%);
-    display:none; flex-direction:column; gap:4px; align-items:center;
-    background:rgba(30,4,20,.65); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    padding:10px 18px; border-radius:16px; border:1px solid rgba(255,140,210,.28);
-    color:#ffd9f0; font-size:12px; font-variant-numeric:tabular-nums; text-align:center; line-height:1.5; }
-  #hud b { color:#fff; font-weight:600; }
+  #sliderWrap { position:fixed; left:16px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; align-items:center; gap:10px;
+    background:rgba(4,20,32,.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    padding:16px 10px; border-radius:22px; border:1px solid rgba(140,220,255,.22); }
+  #slider { -webkit-appearance:none; appearance:none; width:190px; height:34px; background:transparent;
+    transform:rotate(-90deg); transform-origin:center; margin:78px -78px; }
+  #slider::-webkit-slider-runnable-track { height:7px; border-radius:4px;
+    background:linear-gradient(90deg,#0d3a52,#49c6ff); }
+  #slider::-webkit-slider-thumb { -webkit-appearance:none; width:27px; height:27px; border-radius:50%;
+    background:#eaf9ff; border:3px solid #3aa9e0; margin-top:-10px; box-shadow:0 2px 10px rgba(0,0,0,.5); }
+  #slider::-moz-range-track { height:7px; border-radius:4px; background:#0d3a52; }
+  #slider::-moz-range-thumb { width:27px; height:27px; border-radius:50%; background:#eaf9ff; border:3px solid #3aa9e0; }
+  #depthLabel { color:#bfe6ff; font-size:12px; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
+  #waveIcon { font-size:17px; }
 
-  #btnRow { position:fixed; bottom:calc(env(safe-area-inset-bottom) + 22px); left:50%; transform:translateX(-50%);
-    display:none; gap:10px; }
-  .btn { padding:13px 22px; font-size:14px; font-weight:600; border:none; border-radius:30px;
-    background:rgba(30,4,20,.7); backdrop-filter:blur(10px); color:#ffd9f0;
-    border:1px solid rgba(255,140,210,.3); }
-  .btn.primary { background:linear-gradient(135deg,#ff9fd8,#ff4fae); color:#32021f; border:none; }
-  .btn:active { transform:scale(.95); }
+  #floorWrap { position:fixed; right:16px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; align-items:center; gap:10px;
+    background:rgba(4,20,32,.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    padding:16px 10px; border-radius:22px; border:1px solid rgba(140,220,255,.22); }
+  #floorSlider { -webkit-appearance:none; appearance:none; width:150px; height:34px; background:transparent;
+    transform:rotate(-90deg); transform-origin:center; margin:58px -58px; }
+  #floorSlider::-webkit-slider-runnable-track { height:7px; border-radius:4px;
+    background:linear-gradient(90deg,#3a2a10,#ffb454); }
+  #floorSlider::-webkit-slider-thumb { -webkit-appearance:none; width:25px; height:25px; border-radius:50%;
+    background:#fff4e2; border:3px solid #e0952f; margin-top:-9px; box-shadow:0 2px 10px rgba(0,0,0,.5); }
+  #floorSlider::-moz-range-track { height:7px; border-radius:4px; background:#3a2a10; }
+  #floorSlider::-moz-range-thumb { width:25px; height:25px; border-radius:50%; background:#fff4e2; border:3px solid #e0952f; }
+  #floorLabel { color:#ffd9a8; font-size:12px; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
+  #floorIcon { font-size:16px; }
 
-  #err { position:fixed; bottom:110px; left:50%; transform:translateX(-50%); display:none;
-    color:#ffd9d9; background:rgba(70,10,10,.8); padding:11px 18px; border-radius:14px; font-size:13px;
+  #hint { position:fixed; bottom:26px; left:50%; transform:translateX(-50%); display:none;
+    color:#cfe9f8; font-size:13px; background:rgba(4,20,32,.6); backdrop-filter:blur(10px);
+    padding:9px 18px; border-radius:20px; border:1px solid rgba(140,220,255,.2); max-width:88vw; text-align:center; }
+  #err { position:fixed; bottom:26px; left:50%; transform:translateX(-50%); display:none;
+    color:#ffd9d9; background:rgba(70,10,10,.75); padding:11px 18px; border-radius:14px; font-size:13px;
     max-width:88vw; text-align:center; }
 </style>
 </head>
@@ -49,23 +67,31 @@
 <video id="cam" playsinline muted autoplay></video>
 
 <div id="overlay">
-  <div id="hud"></div>
-  <div id="btnRow">
-    <button class="btn primary" id="placeBtn">Place sticker</button>
-    <button class="btn" id="gridBtn">Drop grid</button>
-    <button class="btn" id="clearBtn">Clear</button>
+  <div id="sliderWrap">
+    <span id="waveIcon">🌊</span>
+    <input id="slider" type="range" min="5" max="140" value="30" step="1">
+    <span id="depthLabel">0.30 m</span>
   </div>
+  <div id="floorWrap">
+    <span id="floorIcon">📏</span>
+    <input id="floorSlider" type="range" min="80" max="220" value="145" step="1">
+    <span id="floorLabel">1.45 m</span>
+  </div>
+  <div id="hint"></div>
   <div id="err"></div>
 </div>
 
 <div id="startScreen">
-  <h1>Floor Test</h1>
-  <p id="startDesc">This drops pink stickers onto the detected floor. If they sit flat on the ground and stay put as you walk, tracking is good.</p>
+  <h1>AR Flood</h1>
+  <p id="startDesc">Point your phone at the floor and press Start. Water will fill the room around you.</p>
   <button id="startBtn">Start</button>
 </div>
 
 <script type="importmap">
-{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" }}
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
 </script>
 
 <script type="module">
@@ -73,69 +99,105 @@ import * as THREE from 'three';
 
 const $ = id => document.getElementById(id);
 const startScreen=$('startScreen'), startBtn=$('startBtn'), startDesc=$('startDesc'),
-      hud=$('hud'), btnRow=$('btnRow'), errBox=$('err'), camVideo=$('cam');
+      sliderWrap=$('sliderWrap'), slider=$('slider'), depthLabel=$('depthLabel'),
+      hint=$('hint'), errBox=$('err'), camVideo=$('cam');
 
-let renderer, scene, camera, mode=null;
-let hitTestSource=null, refSpace=null, reticle=null;
-let floorY = -1.45;
-const stickers = new THREE.Group();
-let lastHitY = null, hitCount = 0;
+let renderer, scene, camera, water, waterMat, clock=new THREE.Clock();
+let mode = null;                 // 'webxr' | 'gyro'
+let floorY = -1.45;              // metres below eye level
+let waterHeight = 0.30;
+let hitTestSource=null, refSpace=null;
+let reticle;
 
+/* ---------------- capability detection ---------------- */
 async function detectMode(){
-  try { if (navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')) return 'webxr'; }
-  catch(e){}
+  try {
+    if (navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')) return 'webxr';
+  } catch(e){}
   return 'gyro';
 }
 
-/* ---------- sticker factory: flat pink disc with a ring + centre dot ---------- */
-function makeSticker(){
-  const g = new THREE.Group();
+/* ---------------- water shader ---------------- */
+const vert = `
+uniform float uTime;
+varying vec3 vWorld;
+varying float vWave;
+float h(vec2 p){
+  return sin(p.x*1.7 + uTime*1.1)*0.5
+       + sin(p.y*2.3 - uTime*0.9)*0.4
+       + sin((p.x+p.y)*3.1 + uTime*1.6)*0.22
+       + sin((p.x-p.y)*5.3 - uTime*2.1)*0.09;
+}
+void main(){
+  vec3 p = position;
+  float w = h(p.xy) * 0.022;
+  p.z += w;
+  vWave = w;
+  vec4 wp = modelMatrix * vec4(p,1.0);
+  vWorld = wp.xyz;
+  gl_Position = projectionMatrix * viewMatrix * wp;
+}`;
 
-  const disc = new THREE.Mesh(
-    new THREE.CircleGeometry(0.11, 40),
-    new THREE.MeshBasicMaterial({ color:0xff3ea5, transparent:true, opacity:0.55,
-                                  side:THREE.DoubleSide, depthWrite:false })
-  );
-  disc.rotation.x = -Math.PI/2;
-  g.add(disc);
+const frag = `
+precision highp float;
+uniform float uTime;
+uniform vec3  uCamPos;
+uniform vec3  uShallow;
+uniform vec3  uDeep;
+varying vec3 vWorld;
+varying float vWave;
 
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(0.115, 0.145, 40),
-    new THREE.MeshBasicMaterial({ color:0xff85c8, transparent:true, opacity:0.95,
-                                  side:THREE.DoubleSide, depthWrite:false })
-  );
-  ring.rotation.x = -Math.PI/2;
-  g.add(ring);
-
-  // tiny vertical pin so you can judge whether it's lying flat or floating
-  const pin = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.004,0.004,0.10,8),
-    new THREE.MeshBasicMaterial({ color:0xffffff })
-  );
-  pin.position.y = 0.05;
-  g.add(pin);
-
-  g.renderOrder = 3;
-  return g;
+vec3 normalAt(vec2 p){
+  float e = 0.06;
+  float hx = sin((p.x+e)*1.7+uTime*1.1)*0.5 + sin(p.y*2.3-uTime*0.9)*0.4
+           - (sin((p.x-e)*1.7+uTime*1.1)*0.5 + sin(p.y*2.3-uTime*0.9)*0.4);
+  float hy = sin(p.x*1.7+uTime*1.1)*0.5 + sin((p.y+e)*2.3-uTime*0.9)*0.4
+           - (sin(p.x*1.7+uTime*1.1)*0.5 + sin((p.y-e)*2.3-uTime*0.9)*0.4);
+  return normalize(vec3(-hx*0.35, 1.0, -hy*0.35));
 }
 
-function addSticker(x,y,z){
-  const s = makeSticker();
-  s.position.set(x,y,z);
-  stickers.add(s);
-  updateHud();
-}
+void main(){
+  vec3 N = normalAt(vWorld.xz);
+  vec3 V = normalize(uCamPos - vWorld);
+  float fres = pow(1.0 - clamp(dot(N,V),0.0,1.0), 3.0);
 
-/* a 5x5 grid centred on the reticle, to show whether the whole plane is level */
-function dropGrid(cx,cy,cz){
-  const step = 0.4;
-  for (let i=-2;i<=2;i++)
-    for (let j=-2;j<=2;j++)
-      addSticker(cx + i*step, cy, cz + j*step);
+  float d = clamp(length(vWorld.xz - uCamPos.xz)/9.0, 0.0, 1.0);
+  vec3 base = mix(uShallow, uDeep, d*0.85 + vWave*3.0);
+
+  vec3 refl = mix(vec3(0.55,0.75,0.88), vec3(0.90,0.96,1.0), fres);
+  vec3 col = mix(base, refl, fres*0.82);
+
+  vec3 L = normalize(vec3(0.4,1.0,0.25));
+  float spec = pow(max(dot(reflect(-L,N),V),0.0), 90.0);
+  col += vec3(1.0,0.99,0.94) * spec * 0.65;
+
+  col += smoothstep(0.014,0.024,vWave) * 0.10;
+
+  float alpha = mix(0.62, 0.94, fres);
+  alpha *= smoothstep(0.0, 0.12, d + 0.05);
+  gl_FragColor = vec4(col, alpha);
+}`;
+
+function buildWater(){
+  const geo = new THREE.PlaneGeometry(60, 60, 260, 260);
+  waterMat = new THREE.ShaderMaterial({
+    vertexShader: vert, fragmentShader: frag,
+    transparent:true, depthWrite:false, side:THREE.DoubleSide,
+    uniforms:{
+      uTime:{value:0},
+      uCamPos:{value:new THREE.Vector3()},
+      uShallow:{value:new THREE.Color(0x2f9fc4)},
+      uDeep:{value:new THREE.Color(0x06304f)}
+    }
+  });
+  water = new THREE.Mesh(geo, waterMat);
+  water.rotation.x = -Math.PI/2;
+  water.renderOrder = 2;
+  scene.add(water);
 }
 
 function initThree(){
-  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, powerPreference:'high-performance'});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -143,8 +205,8 @@ function initThree(){
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.01, 120);
-  scene.add(stickers);
-
+  scene.add(new THREE.HemisphereLight(0xdff4ff, 0x223344, 1.1));
+  buildWater();
   addEventListener('resize', ()=>{
     camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
@@ -152,16 +214,11 @@ function initThree(){
   });
 }
 
-function updateHud(){
-  const camY = camera ? camera.position.y.toFixed(2) : '—';
-  const hitTxt = lastHitY===null ? 'none yet' : lastHitY.toFixed(3)+' m';
-  hud.innerHTML =
-    `mode: <b>${mode}</b> &nbsp;·&nbsp; stickers: <b>${stickers.children.length}</b><br>` +
-    `camera Y: <b>${camY} m</b> &nbsp;·&nbsp; floor Y: <b>${floorY.toFixed(3)} m</b><br>` +
-    `last hit Y: <b>${hitTxt}</b> &nbsp;·&nbsp; hits: <b>${hitCount}</b>`;
+function updateWaterY(){
+  if (water) water.position.y = floorY + waterHeight;
 }
 
-/* ---------------- WebXR (Galaxy / Android) ---------------- */
+/* ---------------- WebXR path (Android / Galaxy) ---------------- */
 async function startWebXR(){
   initThree();
   renderer.xr.enabled = true;
@@ -177,118 +234,136 @@ async function startWebXR(){
   refSpace = await session.requestReferenceSpace('local-floor');
   const viewerSpace = await session.requestReferenceSpace('viewer');
   hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-  floorY = 0;
+
+  floorY = 0;                    // local-floor puts y=0 at the ground
+  updateWaterY();
 
   reticle = new THREE.Mesh(
-    new THREE.RingGeometry(0.07,0.09,32).rotateX(-Math.PI/2),
-    new THREE.MeshBasicMaterial({color:0x66ff9f})
+    new THREE.RingGeometry(0.09,0.11,32).rotateX(-Math.PI/2),
+    new THREE.MeshBasicMaterial({color:0x8fe6ff, transparent:true, opacity:0.9})
   );
-  reticle.visible=false;
-  scene.add(reticle);
+  reticle.visible=false; scene.add(reticle);
 
-  session.addEventListener('end', ()=>location.reload());
-  showUI();
+  session.addEventListener('end', ()=>{ location.reload(); });
+  showUI('Tap the floor to fine-tune the surface level.');
+
+  session.addEventListener('select', ()=>{
+    if (reticle.visible){
+      floorY = reticle.position.y;
+      updateWaterY();
+      hint.style.opacity='1';
+      hint.textContent = 'Floor set. Use the slider to raise the water.';
+    }
+  });
 
   renderer.setAnimationLoop((t, frame)=>{
     if (frame && hitTestSource){
       const hits = frame.getHitTestResults(hitTestSource);
       if (hits.length){
-        const p = hits[0].getPose(refSpace).transform.position;
+        const pose = hits[0].getPose(refSpace);
         reticle.visible = true;
-        reticle.position.set(p.x,p.y,p.z);
-        lastHitY = p.y; hitCount++;
+        reticle.position.set(pose.transform.position.x, pose.transform.position.y, pose.transform.position.z);
       } else reticle.visible = false;
     }
-    const vc = renderer.xr.getCamera();
-    camera.position.copy(vc.position);
-    if (hitCount % 15 === 0) updateHud();
-    renderer.render(scene, camera);
+    render();
   });
 }
 
-/* ---------------- Gyro fallback (iPhone) ---------------- */
-let deviceQuat = new THREE.Quaternion(), orientationReady=false;
-const zee=new THREE.Vector3(0,0,1), euler=new THREE.Euler();
-const q1=new THREE.Quaternion(-Math.sqrt(0.5),0,0,Math.sqrt(0.5)), qOr=new THREE.Quaternion();
-
-function onOrient(e){
-  if (e.alpha==null) return;
-  euler.set(THREE.MathUtils.degToRad(e.beta),
-            THREE.MathUtils.degToRad(e.alpha),
-            -THREE.MathUtils.degToRad(e.gamma), 'YXZ');
-  deviceQuat.setFromEuler(euler);
-  deviceQuat.multiply(q1);
-  deviceQuat.multiply(qOr.setFromAxisAngle(zee,
-    -THREE.MathUtils.degToRad(screen.orientation?.angle ?? window.orientation ?? 0)));
-  orientationReady = true;
-}
+/* ---------------- Gyro + camera fallback (iPhone) ---------------- */
+let deviceQuat = new THREE.Quaternion();
+let orientationReady = false;
 
 async function startGyro(){
+  // iOS requires the permission prompt to fire inside the user gesture,
+  // so request motion access before the camera await.
   if (typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission === 'function'){
     try {
-      const r = await DeviceOrientationEvent.requestPermission();
-      if (r !== 'granted') showErr('Motion denied — stickers will not track. Enable Motion & Orientation Access in Settings › Safari.');
-    } catch(e){ showErr('Motion unavailable — stickers will not track.'); }
+      const res = await DeviceOrientationEvent.requestPermission();
+      if (res !== 'granted') showErr('Motion access denied — the view will not track. Enable Motion & Orientation Access in Settings › Safari.');
+    } catch(e){
+      showErr('Motion access unavailable — the view will not track.');
+    }
   }
   addEventListener('deviceorientation', onOrient, true);
 
   const stream = await navigator.mediaDevices.getUserMedia({
-    video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} }, audio:false });
+    video:{ facingMode:{ ideal:'environment' }, width:{ideal:1920}, height:{ideal:1080} }, audio:false
+  });
   camVideo.srcObject = stream;
-  camVideo.style.display = 'block';
+  camVideo.style.display='block';
   await camVideo.play();
 
   initThree();
+
+  floorY = -1.45;               // assumed eye height above floor
+  updateWaterY();
   camera.position.set(0,0,0);
-  floorY = -1.45;
-  showUI();
+  $('floorWrap').style.display='flex';   // calibration needed: no real floor detection
+  showUI('Left slider = water depth. Right slider = phone height above floor — adjust until the water sits on the real ground.');
 
   renderer.setAnimationLoop(()=>{
     if (orientationReady) camera.quaternion.copy(deviceQuat);
-    renderer.render(scene, camera);
+    render();
   });
 }
 
-/* ---------- where to put a sticker in each mode ---------- */
-function currentTarget(){
-  if (mode === 'webxr' && reticle && reticle.visible)
-    return reticle.position.clone();
-  // gyro: project the screen centre ray onto the assumed floor plane
-  const dir = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);
-  if (dir.y >= -0.05) return null;              // not looking down enough
-  const t = (floorY - camera.position.y) / dir.y;
-  return camera.position.clone().addScaledVector(dir, t);
+const zee = new THREE.Vector3(0,0,1);
+const euler = new THREE.Euler();
+const q1 = new THREE.Quaternion(-Math.sqrt(0.5),0,0,Math.sqrt(0.5)); // -PI/2 about X
+const qOrient = new THREE.Quaternion();
+function onOrient(e){
+  if (e.alpha===null || e.alpha===undefined) return;
+  const a = THREE.MathUtils.degToRad(e.alpha);
+  const b = THREE.MathUtils.degToRad(e.beta);
+  const g = THREE.MathUtils.degToRad(e.gamma);
+  const o = THREE.MathUtils.degToRad(screen.orientation?.angle ?? window.orientation ?? 0);
+  euler.set(b, a, -g, 'YXZ');
+  deviceQuat.setFromEuler(euler);
+  deviceQuat.multiply(q1);
+  deviceQuat.multiply(qOrient.setFromAxisAngle(zee, -o));
+  orientationReady = true;
 }
 
-$('placeBtn').addEventListener('click', ()=>{
-  const p = currentTarget();
-  if (!p){ showErr('Aim further down at the floor.'); setTimeout(()=>errBox.style.display='none',1800); return; }
-  addSticker(p.x, p.y, p.z);
-});
-$('gridBtn').addEventListener('click', ()=>{
-  const p = currentTarget();
-  if (!p){ showErr('Aim further down at the floor.'); setTimeout(()=>errBox.style.display='none',1800); return; }
-  dropGrid(p.x, p.y, p.z);
-});
-$('clearBtn').addEventListener('click', ()=>{
-  while (stickers.children.length) stickers.remove(stickers.children[0]);
-  updateHud();
-});
+/* ---------------- shared render ---------------- */
+function render(){
+  const dt = clock.getElapsedTime();
+  waterMat.uniforms.uTime.value = dt;
+  camera.getWorldPosition(waterMat.uniforms.uCamPos.value);
+  const cp = waterMat.uniforms.uCamPos.value;
+  water.position.x = cp.x; water.position.z = cp.z;
+  renderer.render(scene, camera);
+}
 
-function showUI(){
+/* ---------------- UI ---------------- */
+function showUI(msg){
   startScreen.style.display='none';
-  hud.style.display='flex';
-  btnRow.style.display='flex';
-  updateHud();
+  sliderWrap.style.display='flex';
+  hint.style.display='block';
+  hint.textContent=msg;
+  setTimeout(()=>{ hint.style.transition='opacity .8s'; hint.style.opacity='0'; }, 6000);
 }
 function showErr(m){ errBox.style.display='block'; errBox.textContent=m; }
+
+slider.addEventListener('input', ()=>{
+  waterHeight = slider.value/100;
+  depthLabel.textContent = waterHeight.toFixed(2)+' m';
+  updateWaterY();
+});
+
+const floorSlider = $('floorSlider'), floorLabel = $('floorLabel');
+floorSlider.addEventListener('input', ()=>{
+  floorY = -(floorSlider.value/100);
+  floorLabel.textContent = (floorSlider.value/100).toFixed(2)+' m';
+  updateWaterY();
+});
 
 startBtn.addEventListener('click', async ()=>{
   startBtn.disabled=true; startBtn.textContent='Starting…';
   try{
     mode = await detectMode();
-    if (mode==='webxr') await startWebXR(); else await startGyro();
+    if (mode==='webxr') await startWebXR();
+    else await startGyro();
   }catch(err){
     startBtn.disabled=false; startBtn.textContent='Start';
     showErr('Could not start: '+(err.message||err));
@@ -297,8 +372,8 @@ startBtn.addEventListener('click', async ()=>{
 
 detectMode().then(m=>{
   startDesc.textContent = m==='webxr'
-    ? 'Real plane detection is available. Sweep the phone over the floor until the green ring appears, then tap Place or Drop grid.'
-    : 'No WebXR here, so this uses camera + gyro with an assumed floor. Aim down at the floor and tap Place.';
+    ? 'Point your phone at the floor and press Start. Move slowly so the floor is detected, then tap to place the surface.'
+    : 'Your browser has no full AR support, so a camera + motion mode will be used. Hold the phone upright and press Start.';
 });
 </script>
 </body>
